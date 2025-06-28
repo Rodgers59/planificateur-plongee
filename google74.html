@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planificateur de Plongée</title>
+
+    <!-- La ligne à ajouter -->
+    <link rel="manifest" href="manifest.json">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <link rel="stylesheet" href="google74.css">
+    <script src="google74.js" defer></script>
+</head>
+<body>
+
+        <!-- ======================================================= -->
+    <!-- === AJOUT DU BANDEAU DÉDIÉ POUR LE TACTILE          === -->
+    <!-- ======================================================= -->
+    <div id="touch-info-banner" class="hidden"></div>
+
+
+    <div class="app-container">
+
+        <section class="form-section">
+            <header>
+                <h1>Planificateur de Plongée</h1>
+            </header>
+            <form id="dive-form">
+                <div class="form-group">
+                    <label for="data-file">Table de plongée (.xlsx, .csv) :</label>
+                    <input type="file" id="data-file" accept=".xlsx, .xls, .csv">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="profondeur">Profondeur (m) :</label>
+                        <input type="number" id="profondeur" name="profondeur" min="0" step="1" placeholder="40">
+                    </div>
+                    <div class="form-group">
+                        <label for="dtr">DTR choisie(mn):</label>
+                        <input type="number" id="dtr" name="dtr" min="0" step="1" placeholder="16">
+                    </div>
+                    <div class="form-group">
+                        <label for="panne-air">Panne d'air(mn) :   </label>
+                        <input type="number" id="panne-air" name="panne-air" min="0" step="1" placeholder="10">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="reserve">Réserve (bar) :</label>
+                        <input type="number" id="reserve" name="reserve" min="0" step="10" value="50">
+                    </div>
+                    <div class="form-group">
+                        <label for="bloc">Bloc (L) :</label>
+                        <select id="bloc" name="bloc">
+                            <option value="12">12 L</option>
+                            <option value="15" selected>15 L</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <fieldset class="display-controls">
+                    <legend>Affichage des courbes</legend>
+                    <div class="form-row">
+                        <div class="control-group">
+                            <input type="checkbox" id="show-main-curve" checked>
+                            <label for="show-main-curve">
+                                <span class="legend-line main-curve-legend"></span>
+                                DTR choisie
+                            </label>
+                        </div>
+                        <div class="control-group">
+                            <input type="checkbox" id="show-security-curve" checked>
+                            <label for="show-security-curve">
+                                <span class="legend-line security-curve-legend"></span>
+                                Optimisée
+                            </label>
+                        </div>
+                        <div class="control-group">
+                            <input type="checkbox" id="show-incident-curve" checked>
+                            <label for="show-incident-curve">
+                                <span class="legend-line incident-curve-legend"></span>
+                                Panne d'air
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+                
+                <button type="button" id="calculate-btn">Générer le profil</button>
+    
+                <!-- === BLOC DES 3 BOUTEILLES DE PLONGÉE === -->
+                <div id="all-tanks-container">
+
+                    <!-- Bouteille 1 : DTR Choisie -->
+                    <div class="tank-wrapper" id="main-tank-wrapper">
+                        <svg class="dive-tank-svg" viewBox="0 0 100 220">
+                            <defs>
+                                <clipPath id="main-tank-clip">
+                                    <rect x="10" y="20" width="80" height="180" rx="20"></rect>
+                                </clipPath>
+                                <clipPath id="main-text-clip">
+                                    <rect id="main-text-clip-rect" x="10" y="20" width="80" height="180"></rect>
+                                </clipPath>
+                            </defs>
+                            <rect x="10" y="20" width="80" height="180" rx="20" fill="#E0E0E0"></rect>
+                            <rect id="main-air-level" x="10" y="20" width="80" height="180" fill="#00C853" clip-path="url(#main-tank-clip)"></rect>
+                            <rect x="10" y="20" width="80" height="180" rx="20" fill="none" stroke="black" stroke-width="3"></rect>
+                            <rect x="30" y="0" width="40" height="25" fill="grey" stroke="black" stroke-width="2"></rect>
+                            <text id="main-pressure-text-bg" x="50" y="115" text-anchor="middle" font-size="24" font-family="monospace" font-weight="bold" fill="black">200</text>
+                            <text id="main-pressure-text" x="50" y="115" text-anchor="middle" font-size="24" font-family="monospace" font-weight="bold" fill="white" clip-path="url(#main-text-clip)">200</text>
+                        </svg>
+                        <p class="tank-label">DTR choisie</p>
+                    </div>
+
+                    <!-- Bouteille 2 : Optimisée -->
+                    <div class="tank-wrapper" id="security-tank-wrapper">
+                        <svg class="dive-tank-svg" viewBox="0 0 100 220">
+                            <defs>
+                                <clipPath id="security-tank-clip">
+                                    <rect x="10" y="20" width="80" height="180" rx="20"></rect>
+                                </clipPath>
+                                <clipPath id="security-text-clip">
+                                    <rect id="security-text-clip-rect" x="10" y="20" width="80" height="180"></rect>
+                                </clipPath>
+                            </defs>
+                            <rect x="10" y="20" width="80" height="180" rx="20" fill="#E0E0E0"></rect>
+                            <rect id="security-air-level" x="10" y="20" width="80" height="180" fill="#00C853" clip-path="url(#security-tank-clip)"></rect>
+                            <rect x="10" y="20" width="80" height="180" rx="20" fill="none" stroke="black" stroke-width="3"></rect>
+                            <rect x="30" y="0" width="40" height="25" fill="grey" stroke="black" stroke-width="2"></rect>
+                            <text id="security-pressure-text-bg" x="50" y="115" text-anchor="middle" font-size="24" font-family="monospace" font-weight="bold" fill="black">200</text>
+                            <text id="security-pressure-text" x="50" y="115" text-anchor="middle" font-size="24" font-family="monospace" font-weight="bold" fill="white" clip-path="url(#security-text-clip)">200</text>
+                        </svg>
+                        <p class="tank-label">Optimisée</p>
+                    </div>
+
+                    <!-- Bouteille 3 : Panne d'air (cachée par défaut) -->
+                    <div class="tank-wrapper hidden" id="incident-tank-wrapper">
+                        <svg class="dive-tank-svg" viewBox="0 0 100 220">
+                            <defs>
+                                <clipPath id="incident-tank-clip">
+                                    <rect x="10" y="20" width="80" height="180" rx="20"></rect>
+                                </clipPath>
+                                <clipPath id="incident-text-clip">
+                                    <rect id="incident-text-clip-rect" x="10" y="20" width="80" height="180"></rect>
+                                </clipPath>
+                            </defs>
+                            <rect x="10" y="20" width="80" height="180" rx="20" fill="#E0E0E0"></rect>
+                            <rect id="incident-air-level" x="10" y="20" width="80" height="180" fill="#00C853" clip-path="url(#incident-tank-clip)"></rect>
+                            <rect x="10" y="20" width="80" height="180" rx="20" fill="none" stroke="black" stroke-width="3"></rect>
+                            <rect x="30" y="0" width="40" height="25" fill="grey" stroke="black" stroke-width="2"></rect>
+                            <text id="incident-pressure-text-bg" x="50" y="115" text-anchor="middle" font-size="24" font-family="monospace" font-weight="bold" fill="black">200</text>
+                            <text id="incident-pressure-text" x="50" y="115" text-anchor="middle" font-size="24" font-family="monospace" font-weight="bold" fill="white" clip-path="url(#incident-text-clip)">200</text>
+                        </svg>
+                        <p class="tank-label">Panne d'air</p>
+                    </div>
+
+                </div>
+                <!-- === FIN DU BLOC DES BOUTEILLES === -->
+
+            </form>
+        </section>
+
+        <section class="graph-section" id="graph-container">
+            <svg id="dive-graph-svg" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                    <style>
+                        .water-background { fill: #e0f7fa; }
+                        .water-surface { fill: #0077c2; }
+                        .axis-boundary { stroke: #000000; stroke-width: 2px; fill: none; }
+                        .axis-tick { stroke: #aaa; stroke-width: 1; }
+                        .grid-line { stroke: #b2ebf2; stroke-width: 1; stroke-dasharray: 3 3; }
+                        .axis-text { font-family: Arial, sans-serif; font-size: 16px; fill: #333; }
+                        
+                        .dive-profile { 
+                            fill: none; 
+                            stroke-width: 4; 
+                            stroke-linejoin: round; 
+                            stroke-linecap: round;
+                            cursor: url('cursorplongeur3.png') 45 10, crosshair;
+                        }
+                        .main-curve { stroke: #01579b; } /* Bleu */
+                        .security-curve { stroke: #2e7d32; } /* Vert */
+                        .incident-curve { stroke: #c62828; } /* Rouge */
+                    </style>
+                </defs>
+            </svg>
+        </section>
+
+    </div>
+    
+    <div id="tooltip" class="hidden"></div>
+
+</body>
+</html
