@@ -1,19 +1,19 @@
 {
   "name": "Planificateur de Plongée",
   "short_name": "Plongée",
-  "start_url": "/google62.html",
+  "start_url": "google88.html",
   "display": "standalone",
   "background_color": "#f4f7f6",
   "theme_color": "#005f73",
   "description": "Un outil simple pour planifier vos profils de plongée.",
   "icons": [
     {
-      "src": "images/icon-192.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "images/icon-512.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
