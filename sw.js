@@ -1,5 +1,5 @@
 // Nom du cache. J'incrémente la version pour forcer la mise à jour.
-const CACHE_NAME = 'dive-planner-cache-v4';
+const CACHE_NAME = 'dive-planner-cache-v5';
 
 // Liste des fichiers essentiels à mettre en cache pour que l'application fonctionne hors ligne.
 const URLS_TO_CACHE = [
