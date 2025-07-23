@@ -1,7 +1,8 @@
 {
   "name": "Planificateur de Plongée",
   "short_name": "Plongée",
-  "start_url": "google88.html",
+  "id": "/",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#f4f7f6",
   "theme_color": "#005f73",
@@ -16,6 +17,22 @@
       "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshot-desktop.png",
+      "sizes": "1400x949",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Planificateur de plongée sur ordinateur"
+    },
+    {
+      "src": "screenshot-mobile.png",
+      "sizes": "428x882",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Planificateur de plongée sur mobile"
     }
   ]
 }
