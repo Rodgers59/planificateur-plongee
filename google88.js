@@ -288,10 +288,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.addEventListener('load', () => {
+    // MESSAGE DE VÉRIFICATION
+    console.log("Tentative d'enregistrement du Service Worker...");
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js')
             .then(reg => console.log('SW enregistré:', reg))
             .catch(err => console.error('Échec SW:', err));
+    } else {
+        console.log("Service Worker non supporté par ce navigateur.");
     }
 });
 
