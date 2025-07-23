@@ -1,5 +1,5 @@
 // Nom du cache. J'incrémente la version pour forcer la mise à jour.
-const CACHE_NAME = 'dive-planner-cache-v7';
+const CACHE_NAME = 'dive-planner-cache-v8';
 
 // Liste des fichiers essentiels à mettre en cache pour que l'application fonctionne hors ligne.
 const URLS_TO_CACHE = [
@@ -13,7 +13,7 @@ const URLS_TO_CACHE = [
   'icon-512.png',  // Chemin corrigé
   'screenshot-desktop.png', // Chemin corrigé
   'screenshot-mobile.png', // Chemin corrigé
-  'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js' 
+  'xlsx.full.min.js' // <-- MODIFIÉ ICI 
 ];
 
 // Le reste du fichier sw.js reste identique...
