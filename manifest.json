@@ -22,14 +22,14 @@
   "screenshots": [
     {
       "src": "screenshot-desktop.png",
-      "sizes": "1400x949",
+      "sizes": "1688x898", 
       "type": "image/png",
       "form_factor": "wide",
       "label": "Planificateur de plongée sur ordinateur"
     },
     {
       "src": "screenshot-mobile.png",
-      "sizes": "428x882",
+      "sizes": "1080x1920",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Planificateur de plongée sur mobile"
